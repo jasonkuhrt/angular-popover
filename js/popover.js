@@ -1,55 +1,54 @@
 var popover = angular.module('popover', []);
 
-popover.directive('popover', function($compile) {
+popover.directive('popover', function($compile, $timeout) {
   return {
+    scope: true,
     link: function(scope, element, attrs) {
-      $(element).popover();
+
+      $(element).popover()
+
+      var popoverOptions      = $(element).data('popover').options
+      var popoverContainerEls = {
+        content: $(element).data('popover').tip().find('.popover-content'),
+        title:   $(element).data('popover').tip().find('.popover-title')
+      }
+
+
 
       //
       // Data binding on popover title and content
       //
-
-      attrs.$observe("title", function(newVal) {
-        $(element).popover(refreshBootstrapPopover());
+      scope.$watch(attrs.title, function(newVal){
+        refreshPopover('title', $compile(newVal)(scope))
       });
 
-      //scope.$watch(attrs.popoverContent, function(newContent) 
-      attrs.$observe("content", function(newContent) {
-        $(element).popover(refreshBootstrapPopover());
+
+      scope.$watch(attrs.content, function(newVal){
+        //refreshPopover('content', $compile(newVal)(scope))
+
+        var compiledNewVal = $compile(newVal)(scope)
+        //refreshPopover('content', $compile(newVal)(scope))
+        console.log('new popover content value', compiledNewVal)
+        $(element).data('popover').options.content = compiledNewVal
+        $(element).data('popover').tip().find('.popover-content').html(compiledNewVal)
+        //$(element).data('popover').tip().find('.popover-content').text('sdkfj')
       });
 
-      //
-      // Integrate Bootstrap
-      //
 
-      function refreshBootstrapPopover(){
-        // BS popoveres cannot be updated so we use brute force
-        $(element).popover('destroy');
-        return buildBootstrapPopoverConfigObject();
+
+      function refreshPopover(popoverPart, newContent){
+        // since we're interacting with the popover DOM directly, we have to honour
+        // the html option manually
+        var insertionMethod = popoverOptions.html ? 'html' : 'text'
+
+        // make the content change display immediately
+        popoverContainerEls[popoverPart][insertionMethod](newContent)
+
+        // make the content change persist
+        popoverOptions[popoverPart] = newContent;
       }
 
-      function buildBootstrapPopoverConfigObject(){
-        // Because we use brute force on every BS popover update
-        // we recreate the popover config object from scratch each time
-        //
-        // BS popover uses literal html-attributes if present over js config properties
-        // This means we cannot use the BS popover attribute names because they will prevent the popover
-        // from using the direcrtive's necessary processing of those attributes
-        // that we want binding on
-        //
-        // while attributes that don't need angularjs processing could still use the native BS
-        // attribute names, then we would create an inconsistent API (i.e. only some attributes need to be popover<name>)
-        // and that seems to only add confusion, therefore we just force the popover prefix on every option
-        //
-        // options based on http://twitter.github.com/bootstrap/javascript.html#popovers
-        return {
-          animation:  scope.$eval(attrs.popoverAnimation)
-          html:       scope.$eval(attrs.popoverHtml)
-          placement:  scope.$eval(attrs.popoverHtml)
-          title:      attrs.popoverTitle
-          content:    $compile(attrs.popoverContent)(scope),
-        };
-      }
-    }
-  };
+
+    } // link
+  } // return literaly
 });

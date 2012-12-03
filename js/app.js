@@ -6,7 +6,7 @@ app.controller('book', function($scope, $timeout) {
   $scope.chapterTitle   = 'Introduction';
   $scope.petTypes       = ['Cat', 'Bird', 'Dog', 'Snake']
   $scope.popoverTitle   = "<h1>About the boat</h1>"
-  $scope.popoverContent = "<p>popover content</p>"
+  $scope.popoverContent = '<ul><li ng-repeat="petType in petTypes">{{petType}}</li></ul>'
 
 
 
@@ -15,12 +15,11 @@ app.controller('book', function($scope, $timeout) {
   //
 
   $timeout(function(){
-    console.log('timeout function fire! popover content')
-    $scope.popoverContent = '<ul><li ng-repeat="petType in petTypes">{{petType}}</li></ul>'
+    $scope.petTypes = ['ore', 'rutter', 'cannon', 'sail']
   }, 1000)
 
   $timeout(function(){
-    console.log('timeout function fire! popover title')
     $scope.popoverTitle = "<h3>About the H.M.S. Beagle</h3>"
   }, 2000)
+
 });
