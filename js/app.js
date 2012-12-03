@@ -19,7 +19,11 @@ app.controller('book', function($scope, $timeout) {
   }, 1000)
 
   $timeout(function(){
-    $scope.popoverTitle = "<h3>About the H.M.S. Beagle</h3>"
+    $scope.popoverTitle = "<h3>About the H.M.S. Beagle{{optionalPunctuation}}</h3>"
   }, 2000)
+
+  $timeout(function(){
+    $scope.optionalPunctuation = " ?!!!?"
+  }, 3000)
 
 });

@@ -24,14 +24,25 @@ popover.directive('popover', function($compile, $timeout) {
 
 
       scope.$watch(attrs.content, function(newVal){
-        //refreshPopover('content', $compile(newVal)(scope))
+        // v1
+        // refreshPopover('content', $compile(newVal)(scope))
 
+        // test, works
+        // $(element).data('popover').tip().find('.popover-content').text('sdkfj')
+
+        // v2
         var compiledNewVal = $compile(newVal)(scope)
-        //refreshPopover('content', $compile(newVal)(scope))
-        console.log('new popover content value', compiledNewVal)
-        $(element).data('popover').options.content = compiledNewVal
-        $(element).data('popover').tip().find('.popover-content').html(compiledNewVal)
-        //$(element).data('popover').tip().find('.popover-content').text('sdkfj')
+        //console.log('new popover content value', compiledNewVal)
+        //$(element).data('popover').options.content = compiledNewVal
+
+        //$(element).data('popover').tip().find('.popover-content').html(compiledNewVal)
+
+        // v3
+        //containerEl = $(element).data('popover').tip().find('.popover-content')
+        //containerEl.html(compiledNewVal)
+        //console.log(containerEl, compiledNewVal)
+
+
       });
 
 
