@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html, ng-app="app">
+  <head>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
+  </head>
+  <body class="container">
+    <div class="span6" ng-controller="book">
+      <h1>{{bookTitle}}</h1>
+      <article>
+        <h2 popover
+          popover-title="{{popoverTitle}}"
+          popover-content="{{popoverContent}}"
+          popover-placement="bottom"
+          popover-html="true">{{chapterTitle}}</h2>
+        <div ng-bind-html="chapterBody"></div>
+      </article>
+    </div>
+    <script src="lib/jquery-1.8.1.min.js"></script>
+    <script src="lib/bootstrap.js"></script>
+    <script src="lib/angular.js"></script>
+    <script src="lib/angular.sanitize.js"></script>
+    <script src="js/popover.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
