@@ -1,56 +1,47 @@
 var popover = angular.module('popover', []);
 
 popover.directive('popover', function($compile) {
-  return {
-    scope: true,
-    link: function(scope, element, attrs) {
-
-      // init
-      element.popover();
-
-      //scope.confObject = scope.$eval(attrs.popover);
-      //console.log(scope.confObject);
+  return function(scope, element, attrs) {
 
 
 
-      //
-      // Data binding on popover title and content attributes
-      //
-      scope.$watch(attrs.popoverTitle, function(newVal){
-        if (newVal) {
-          refreshPopover('title', newVal);
+    // init
+    element.popover();
+    prepPopoverDestruction();
+
+
+
+    //
+    // Data binding on the entire popover config
+    //
+    scope.$watch(attrs.popover, function(newOpts){
+      if (newOpts) {
+        // not the most effecient technique? if one option changes every single
+        // option is considered changed (recalculated)
+        for (opt in newOpts) {
+          var optValue = (opt == 'title' || opt == 'content') ? $compile(newOpts[opt])(scope) : newOpts[opt] ;
+          element.data('popover').options[opt] = optValue;
         }
-      });
-
-      scope.$watch(attrs.popoverContent, function(newVal){
-        if (newVal) {
-          refreshPopover('content', newVal);
-        }
-      });
-
-      scope.$watch(attrs.popover, function(newVal){
-        if (newVal) {
-          for (p in newVal) {
-            if (p == 'title' || p == 'content') {
-              element.data('popover').options[p] = $compile(newVal[p])(scope)
-            } else {
-              element.data('popover').options[p] = newVal[p]
-            }
-          }
-          element.popover('setContent')
-        }
-      }, true);
-
-
-      //
-      // popoverPart refers to either the 'title' or 'content'
-      //
-      function refreshPopover(popoverPart, newVal){
-        // update options with new content
-        element.data('popover').options[popoverPart] = $compile(newVal)(scope);
-        // refresh the popover, which will use the newly changed options
         element.popover('setContent');
       }
+    }, true);
+
+
+
+    //
+    //  BS creates popovers near the bottom of the DOM
+    //  therefore if a popover is open in a destroyed scope (i.e. route change -> view change)
+    //  its markup will stay stagnant in the page
+    //
+    //  This function handles the above case
+    //
+    function prepPopoverDestruction() {
+      // save a popover reference for teardown, element
+      // isn't available after $destroy evidently?
+      var popoverObject = element.data('popover');
+      scope.$on("$destroy", function() {
+        popoverObject.destroy();
+      });
     }
-  }
+  };
 });
