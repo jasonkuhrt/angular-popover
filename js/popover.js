@@ -24,7 +24,7 @@ popover.directive('popover', function($compile) {
           if ((opt !== 'title' && opt !== 'content') || !newOpts.html) {
             var optValue = newOpts[opt];
           } else {
-            var optValue = safeCompile({source:newOpts[opt], wrapperClass:'popover-'+opt, scope:scope});
+            var optValue = $compile($(newOpts[opt]).wrap('div').addClass('popover'+opt+'-wrapper'))(scope)
           }
           element.data('popover').options[opt] = optValue;
         }
@@ -50,19 +50,6 @@ popover.directive('popover', function($compile) {
       scope.$on("$destroy", function() {
         popoverObject.destroy();
       });
-    }
-
-
-
-    //
-    //  Options
-    //  source | scope | wrapper-class
-    //
-    function safeCompile(opts) {
-      opts.wrapperClass = opts.wrapperClass || 'content'
-      // wrapping is important because $compile will not work on plaintext, it needs a root-node
-      wrappedSource = "<div class='"+opts.wrapperClass+"-wrapper'>"+opts.source+"</div>"
-      return $compile(wrappedSource)(opts.scope)
     }
   };
 });
