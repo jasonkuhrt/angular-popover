@@ -1,65 +1,56 @@
 var popover = angular.module('popover', []);
 
-popover.directive('popover', function($compile, $timeout) {
+popover.directive('popover', function($compile) {
   return {
     scope: true,
     link: function(scope, element, attrs) {
 
-      $(element).popover()
+      // init
+      element.popover();
 
-      var popoverOptions      = $(element).data('popover').options
-      var popoverContainerEls = {
-        content: $(element).data('popover').tip().find('.popover-content'),
-        title:   $(element).data('popover').tip().find('.popover-title')
-      }
+      //scope.confObject = scope.$eval(attrs.popover);
+      //console.log(scope.confObject);
 
 
 
       //
-      // Data binding on popover title and content
+      // Data binding on popover title and content attributes
       //
-      scope.$watch(attrs.title, function(newVal){
-        refreshPopover('title', $compile(newVal)(scope))
+      scope.$watch(attrs.popoverTitle, function(newVal){
+        if (newVal) {
+          refreshPopover('title', newVal);
+        }
       });
 
-
-      scope.$watch(attrs.content, function(newVal){
-        // v1
-        // refreshPopover('content', $compile(newVal)(scope))
-
-        // test, works
-        // $(element).data('popover').tip().find('.popover-content').text('sdkfj')
-
-        // v2
-        var compiledNewVal = $compile(newVal)(scope)
-        //console.log('new popover content value', compiledNewVal)
-        //$(element).data('popover').options.content = compiledNewVal
-
-        //$(element).data('popover').tip().find('.popover-content').html(compiledNewVal)
-
-        // v3
-        //containerEl = $(element).data('popover').tip().find('.popover-content')
-        //containerEl.html(compiledNewVal)
-        //console.log(containerEl, compiledNewVal)
-
-
+      scope.$watch(attrs.popoverContent, function(newVal){
+        if (newVal) {
+          refreshPopover('content', newVal);
+        }
       });
 
+      scope.$watch(attrs.popover, function(newVal){
+        if (newVal) {
+          for (p in newVal) {
+            if (p == 'title' || p == 'content') {
+              element.data('popover').options[p] = $compile(newVal[p])(scope)
+            } else {
+              element.data('popover').options[p] = newVal[p]
+            }
+          }
+          element.popover('setContent')
+        }
+      }, true);
 
 
-      function refreshPopover(popoverPart, newContent){
-        // since we're interacting with the popover DOM directly, we have to honour
-        // the html option manually
-        var insertionMethod = popoverOptions.html ? 'html' : 'text'
-
-        // make the content change display immediately
-        popoverContainerEls[popoverPart][insertionMethod](newContent)
-
-        // make the content change persist
-        popoverOptions[popoverPart] = newContent;
+      //
+      // popoverPart refers to either the 'title' or 'content'
+      //
+      function refreshPopover(popoverPart, newVal){
+        // update options with new content
+        element.data('popover').options[popoverPart] = $compile(newVal)(scope);
+        // refresh the popover, which will use the newly changed options
+        element.popover('setContent');
       }
-
-
-    } // link
-  } // return literaly
+    }
+  }
 });
