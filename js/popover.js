@@ -26,6 +26,7 @@ popover.directive('popover', function($compile) {
         }
         element.popover('setContent');
       }
+    // compare equality, not reference, thus allowing us to watch an object, array, etc.
     }, true);
 
 
