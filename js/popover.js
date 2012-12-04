@@ -21,7 +21,11 @@ popover.directive('popover', function($compile) {
         // not the most effecient technique? if one option changes every single
         // option is considered changed (recalculated)
         for (opt in newOpts) {
-          var optValue = (opt == 'title' || opt == 'content') ? $compile(newOpts[opt])(scope) : newOpts[opt] ;
+          if ((opt !== 'title' && opt !== 'content') || !newOpts.html) {
+            var optValue = newOpts[opt];
+          } else {
+            var optValue = safeCompile({source:newOpts[opt], wrapperClass:'popover-'+opt, scope:scope});
+          }
           element.data('popover').options[opt] = optValue;
         }
         element.popover('setContent');
@@ -46,6 +50,19 @@ popover.directive('popover', function($compile) {
       scope.$on("$destroy", function() {
         popoverObject.destroy();
       });
+    }
+
+
+
+    //
+    //  Options
+    //  source | scope | wrapper-class
+    //
+    function safeCompile(opts) {
+      opts.wrapperClass = opts.wrapperClass || 'content'
+      // wrapping is important because $compile will not work on plaintext, it needs a root-node
+      wrappedSource = "<div class='"+opts.wrapperClass+"-wrapper'>"+opts.source+"</div>"
+      return $compile(wrappedSource)(opts.scope)
     }
   };
 });
