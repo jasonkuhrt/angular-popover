@@ -24,7 +24,7 @@ popover.directive('popover', function($compile) {
           if ((opt !== 'title' && opt !== 'content') || !newOpts.html) {
             var optValue = newOpts[opt];
           } else {
-            var optValue = $compile($(newOpts[opt]).wrap('div').addClass('popover'+opt+'-wrapper'))(scope)
+            var optValue = $compile($(newOpts[opt]).wrap('div').addClass('popover-'+opt+'-wrapper'))(scope)
           }
           element.data('popover').options[opt] = optValue;
         }
