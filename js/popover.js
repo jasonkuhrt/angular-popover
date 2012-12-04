@@ -5,7 +5,9 @@ popover.directive('popover', function($compile) {
 
 
 
+    //
     // init
+    //
     element.popover();
     prepPopoverDestruction();
 
@@ -31,7 +33,8 @@ popover.directive('popover', function($compile) {
     //
     //  BS creates popovers near the bottom of the DOM
     //  therefore if a popover is open in a destroyed scope (i.e. route change -> view change)
-    //  its markup will stay stagnant in the page
+    //  its markup will stay stagnant in the page, and visually a popover will be hovering
+    //  aimlessly on the page, unable to be closed by the user!
     //
     //  This function handles the above case
     //
