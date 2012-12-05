@@ -14,7 +14,9 @@ files = [
   // libraries
   'lib/jquery-1.8.1.min.js',
   'lib/angular.js',
+  'lib/angular.sanitize.js',
   'lib/angular-mocks.js',
+  'lib/bootstrap.js',
 
   // our app
   'js/*.js',
@@ -23,7 +25,7 @@ files = [
   'test/*.js',
 
   // templates
-  'tpl/*.html'
+  'test/*.html'
 ];
 
 // generate js files from html templates
