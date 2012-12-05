@@ -21,10 +21,13 @@ popover.directive('popover', function($compile) {
         // not the most effecient technique? if one option changes every single
         // option is considered changed (recalculated)
         for (opt in newOpts) {
-          if ((opt !== 'title' && opt !== 'content') || !newOpts.html) {
+          if (
+            (opt !== 'title' && opt !== 'content') ||   //  we don't need to compile non-content stuff
+            !newOpts.html ||                            //  if html option is off, we don't need to compile content
+            !$(newOpts[opt]).length) {                  //  if the content is plaintext we don't need to compile it
             var optValue = newOpts[opt];
           } else {
-            var optValue = $compile($(newOpts[opt]).wrap('div').addClass('popover-'+opt+'-wrapper'))(scope)
+            var optValue = $compile(newOpts[opt])(scope);
           }
           element.data('popover').options[opt] = optValue;
         }
