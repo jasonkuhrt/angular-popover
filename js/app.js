@@ -16,7 +16,7 @@ app.controller('book', function($scope, $timeout) {
 
 
   //
-  // Mock async data changes
+  // Demo async data changes
   //
 
   // change the content data

@@ -1,12 +1,11 @@
+chai.should()
+
 describe('popover', function() {
-
-
-
+  // variables accessible in each test
   var scope, popoverEl;
 
   // load the popover code
   beforeEach(module('popover'));
-
   beforeEach(inject(function($rootScope, $compile) {
     var scenarioString =
       '<p popover="popoverConfig">' +
@@ -18,47 +17,54 @@ describe('popover', function() {
     $compile(scenarioElement)(scope);
     scope.$digest();
 
-    popoverEl = scenarioElement.data('popover').tip()
+    // create a reference to the popover DOM that we want to test
+    popoverEl = scenarioElement.data('popover').tip();
   }));
 
 
 
-  it('should support string literals', inject(function($compile, $rootScope){
-    scope.popoverConfig = {title:'test-title', content:'test-content'};
-    scope.$digest();
-    expect(popoverEl.find(".popover-title").text()).toBe('test-title');
-    expect(popoverEl.find(".popover-content").text()).toBe('test-content');
-  }));
+  it('should support string literals', function(){
+    scope.$apply(function(){
+      scope.popoverConfig = {title:'test-title', content:'test-content'};
+    });
+    popoverEl.find(".popover-title").text().should.equal('test-title');
+    popoverEl.find(".popover-content").text().should.equal('test-content');
+  });
 
-  it('should support scope variables within the title or content templates', inject(function($compile, $rootScope, $timeout){
-    scope.animal        = 'cow';
-    scope.animalSound   = 'moo';
-    scope.topic         = 'The sounds of animals'
-    scope.popoverConfig = {
-      content: '<div>The sound of a {{animal}}: {{animalSound}}</div>',
-      title:   '<pre>{{topic}}</pre>',
-      html:    true
-    };
-    scope.$digest();
 
-    expect(popoverEl.find(".popover-content").text()).toBe('The sound of a cow: moo');
-    expect(popoverEl.find(".popover-title").text()).toBe('The sounds of animals');
 
-    /*
+  it('should support *bound* scope variables within the title or content templates', function(done){
+    scope.$apply(function(){
+      scope.animal        = 'cow';
+      scope.animalSound   = 'moo';
+      scope.topic         = 'The sounds of animals';
+      scope.popoverConfig = {
+        content: '<div>The sound of a {{animal}}: {{animalSound}}</div>',
+        title:   '<pre>{{topic}}</pre>',
+        html:    true
+      };
+    });
 
-    TODO I have to read up on how to do or mock async testing in Jasmine and/or anguarljs
+    popoverEl.find(".popover-content").text().should.equal('The sound of a cow: moo');
+    popoverEl.find(".popover-title").text().should.equal('The sounds of animals');
 
-    $timeout(function(){
-      scope.animal = 'crow';
-      scope.$digest();
-      expect(popoverEl.find(".popover-content").text()).toBe('the sound of a crow: moo')
-    }, 1000);
+    setTimeout(function(){
+      scope.$apply(function(){
+        scope.animal = 'crow';
+        scope.topic  = 'The sounds of life';
+      });
+      popoverEl.find(".popover-content").text().should.equal('The sound of a crow: moo');
+      popoverEl.find(".popover-title").text().should.equal('The sounds of life');
+    }, 100);
 
-    $timeout(function(){
-      scope.animalSound = 'caw';
-      scope.$digest();
-      expect(popoverEl.find(".popover-content").text()).toBe('the sound of a crow: caw2')
-    }, 2000)
-    */
-  }));
+    setTimeout(function(){
+      scope.$apply(function(){
+        scope.animalSound = 'caw';
+        scope.topic       = 'The sounds of creatures';
+      });
+      popoverEl.find(".popover-content").text().should.equal('The sound of a crow: caw');
+      popoverEl.find(".popover-title").text().should.equal('The sounds of creatures');
+      done();
+    }, 200);
+  });
 });

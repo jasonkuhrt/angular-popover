@@ -20,7 +20,7 @@ popover.directive('popover', function($compile) {
       if (newOpts) {
         // not the most effecient technique? if one option changes every single
         // option is considered changed (recalculated)
-        for (opt in newOpts) {
+        for (var opt in newOpts) {
           if (
             (opt !== 'title' && opt !== 'content') ||   //  we don't need to compile non-content stuff
             !newOpts.html ||                            //  if html option is off, we don't need to compile content
