@@ -33,7 +33,7 @@ describe('popover', function() {
 
 
 
-  it('should support *bound* scope variables within the title or content templates', function(done){
+  it('should support *bound* scope variables', function(done){
     scope.$apply(function(){
       scope.animal        = 'cow';
       scope.animalSound   = 'moo';
@@ -67,4 +67,24 @@ describe('popover', function() {
       done();
     }, 200);
   });
+
+
+
+  it('should update itself if the html option changes', function(done){
+    scope.$apply(function(){
+      scope.popoverConfig = {
+        title: "<p>test-title</p>",
+        html: false
+      }
+    })
+    popoverEl.find(".popover-title").text().should.equal('<p>test-title</p>');
+    setTimeout(function(){
+      scope.$apply(function(){
+        scope.popoverConfig.html = true;
+      });
+      popoverEl.find(".popover-title").text().should.equal('test-title');
+      done()
+    }, 100);
+  });
+
 });
