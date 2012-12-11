@@ -1,4 +1,4 @@
-var app = angular.module('app', ['popover', 'ngSanitize']);
+var app = angular.module('app', ['popover', 'bindCompile', 'ngSanitize']);
 
 
 app.controller('book', function($scope, $timeout) {

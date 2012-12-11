@@ -10,16 +10,16 @@ basePath = '';
 files = [
   MOCHA,
   MOCHA_ADAPTER,
-  'lib/chai.js',
+  'vendor/chai.js',
 
-  // libraries
-  'lib/jquery-1.8.1.min.js',
-  'lib/angular.js',
-  'lib/angular-mocks.js',
-  'lib/bootstrap.js',
+  // vendorraries
+  'vendor/jquery-1.8.1.min.js',
+  'vendor/angular.js',
+  'vendor/angular-mocks.js',
+  'vendor/bootstrap.js',
 
   // our app
-  'js/*.js',
+  'app/js/*.js',
 
   // tests
   'test/*.js',

@@ -1,0 +1,18 @@
+{
+  "name": "angular-directives",
+  "version": "0.0.0",
+  "description": "Test out angular directive ideas",
+  "main": "config.js",
+  "dependencies": {
+    "css-brunch": "~1.3.0",
+    "javascript-brunch": "~1.3.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jasonkuhrt/angular-popover.git"
+  },
+  "author": "Jason Kuhrt",
+  "license": "BSD",
+  "readmeFilename": "Readme.md"
+}
